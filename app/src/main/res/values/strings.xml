@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">SxEqEm</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">晋震应急</string>
+    <string name="title_locate">定位</string>
+    <string name="title_data">资料</string>
+    <string name="title_estimate">评估</string>
+    <string name="title_dynamic">动态</string>
 </resources>
