@@ -7,9 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.tianditu.android.maps.GeoPoint;
+import com.tianditu.android.maps.MapController;
+import com.tianditu.android.maps.MapView;
+
+import com.tianditu.android.maps.MapView;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    private MapView mMapView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,6 +50,21 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        //地图视图
+        mMapView = (MapView) findViewById(R.id.main_mapview);
+        MapController mMapController = mMapView.getController();
+        mMapView.setBuiltInZoomControls(true);
+        GeoPoint point = new GeoPoint((int) (39.915 * 1E6), (int) (116.404 * 1E6));
+        mMapController.setCenter(point);
+        mMapController.setZoom(12);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        mMapView.onDestroy();
+        super.onDestroy();
     }
 
 }
