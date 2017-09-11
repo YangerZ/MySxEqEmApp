@@ -1,0 +1,165 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:id="@+id/mapf"
+
+             tools:context="com.example.zhoajie.sxeqem.MapFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.tianditu.android.maps.MapView
+        android:id="@+id/main_mapview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!--floating Button-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_add_locate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:elevation="5.0dip"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/background_light"
+        app:elevation="2dp"
+        app:fabSize="normal"/>
+    <!--add definelayer-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:layout_margin="20dp"
+
+        >
+      <ImageButton
+          android:id="@+id/addlayer_imgBtn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:background="@drawable/ic_layers_black_24dp"
+          android:minHeight="48dp"
+          android:minWidth="48dp"
+
+
+          />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/search_layout"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:padding="2dp"
+       android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+       android:paddingBottom="10dp"
+        android:background="#f4e2e2e2"
+        >
+        <android.support.v7.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
+            android:iconifiedByDefault="false"
+            android:queryHint="输入相关POI信息"
+            android:id="@+id/sv_query"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:minHeight="20dp"
+
+            android:layout_weight="0.6"
+            android:background="#ffffff"
+            >
+
+        </android.support.v7.widget.SearchView>
+        <Button
+            android:id="@+id/btn_queryPOI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:height="40dp"
+            android:width="160dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/queryBtn"
+            android:textColor="#fff"
+            android:textSize="14dp"
+            android:backgroundTint="#e8fd4080"
+            android:layout_gravity="right|center_vertical"
+            android:layout_weight="0.4"
+
+            />
+    </LinearLayout>
+    <!--MapType-->
+    <LinearLayout
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="right"
+         android:paddingLeft="0dp"
+         android:layout_marginTop="70dp"
+         android:layout_marginRight="5dp"
+         android:background="#f4e2e2e2"
+          >
+         <Switch
+             android:id="@+id/switch_type"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:text="@string/basicmap"
+             android:layout_marginLeft="6dp"
+             android:typeface="normal"
+             android:switchMinWidth="40dp"
+             android:width="80dp"
+             android:switchPadding="0dp"
+             android:textOff="@string/imagemap"
+             android:textOn="@string/basicmap"
+             android:theme="@style/mySwitch"
+             android:splitTrack="false"
+             android:showText="false"
+             android:thumbTextPadding="0dp"
+             android:checked="false"
+
+             />
+     </LinearLayout>
+    <!--Popup Infomation-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/bottomInfo_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+
+        android:paddingRight="100dp"
+        android:paddingLeft="20dp"
+        android:paddingBottom="20dp"
+
+        >
+     <TextView
+         android:id="@+id/geo_info"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:typeface="monospace"
+        style="@style/style_tv_bottom"
+         android:padding="5dp"
+
+         />
+        <TextView
+            android:id="@+id/atom_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:typeface="monospace"
+            style="@style/style_tv_bottom"
+            android:padding="5dp"
+
+            />
+    </LinearLayout>
+
+
+
+
+</FrameLayout>

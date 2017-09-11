@@ -1,7 +1,35 @@
 <resources>
     <string name="app_name">晋震应急</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="str_map_fragment">Mapfragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="List_fragment">List fragment</string>
+
+
     <string name="title_locate">定位</string>
     <string name="title_data">资料</string>
     <string name="title_estimate">评估</string>
     <string name="title_dynamic">动态</string>
+    <!--弹出坐标dialog Layout-->
+    <string name="lbl_1">X:</string>
+    <string name="lbl_2">Y:</string>
+    <string name="btn_text_addxy">添加</string>
+    <string name="btn_text_cancal">取消</string>
+
+    <!--短信号码 public 是公布的号码  myphone是自己手机测试的号码-->
+    <string name="public_sms_number">10657301620101</string>
+    <string name="myphone_sms_number">8613132525116</string>
+
+    <!--MapFragment-->
+    <string name="basicmap">地图</string>
+    <string name="imagemap">卫星</string>
+    <string name="queryBtn">查询</string>
+
+    <!--自定义图层URL路径-->
+    <string name="webserverurl">http://t1.tianditu.cn/DataServer?</string>
 </resources>

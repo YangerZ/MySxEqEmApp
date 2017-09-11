@@ -8,4 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="mySwitch" parent="Theme.AppCompat.Light">
+        <!-- switch 打开时的按钮的颜色 轨迹颜色默认为30%（看效果就明白30%是怎么回事了）这个颜色 -->
+        <item name="colorControlActivated">@android:color/holo_red_light</item>
+        <!--  switch关闭时的按钮的颜色 -->
+        <item name="colorSwitchThumbNormal">@color/colorPrimaryDark</item>
+        <!-- switch关闭时的轨迹的颜色 30%这个颜色 -->
+        <item name="android:colorForeground">@android:color/holo_green_dark</item>
+        <item name="android:textColorHint">#de303f9e</item>
+
+    </style>
+   <style name="style_tv_bottom">
+       <item name="android:textSize">15dp</item>
+       <item name="android:textColor">#ffffff</item>
+       <item name="android:background">#c4fd4444</item>
+
+   </style>
 </resources>
