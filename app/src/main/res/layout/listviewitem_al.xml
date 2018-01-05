@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:orientation="vertical"
+
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#85004dfe"
+        >
+        <TextView
+            android:id="@+id/tv_listitem_al"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前选项"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_centerVertical="true"
+            android:id="@+id/imgview_listitem_al"
+            android:layout_alignParentRight="true"
+
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/iv_divider_listitem_al"
+            android:background="#e9ffffff"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+</LinearLayout>

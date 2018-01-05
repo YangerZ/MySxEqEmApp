@@ -16,8 +16,8 @@
     <string name="title_estimate">评估</string>
     <string name="title_dynamic">动态</string>
     <!--弹出坐标dialog Layout-->
-    <string name="lbl_1">X:</string>
-    <string name="lbl_2">Y:</string>
+    <string name="lbl_1">纬度:</string>
+    <string name="lbl_2">经度:</string>
     <string name="btn_text_addxy">添加</string>
     <string name="btn_text_cancal">取消</string>
 
@@ -26,10 +26,15 @@
     <string name="myphone_sms_number">8613132525116</string>
 
     <!--MapFragment-->
-    <string name="basicmap">地图</string>
-    <string name="imagemap">卫星</string>
+    <string name="basicmap">卫星</string>
+    <string name="imagemap">地图</string>
     <string name="queryBtn">查询</string>
-
+    <string name="tab1_title">行政区基本资料</string>
+    <string name="tab2_title">案例和预案</string>
     <!--自定义图层URL路径-->
     <string name="webserverurl">http://t1.tianditu.cn/DataServer?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="PGTabName">评估页内容</string>
+    <string name="lbl_3">震级</string>
 </resources>

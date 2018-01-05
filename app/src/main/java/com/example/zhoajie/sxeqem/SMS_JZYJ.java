@@ -15,6 +15,10 @@ public class SMS_JZYJ implements Parcelable {
     private String _bw;
     private String _dj;
 
+
+
+    private String _level;
+
     public void set_Date(String date){
        this._date=date;
     }
@@ -29,6 +33,9 @@ public class SMS_JZYJ implements Parcelable {
     }
     public void set_DJ(String dj){
         this._dj=dj;
+    }
+    public void set_Level(String _level) {
+        this._level = _level;
     }
 
 
@@ -47,7 +54,7 @@ public class SMS_JZYJ implements Parcelable {
     public String get_DJ(){
         return  this._dj;
     }
-
+    public String get_Level() {return _level;}
     @Override
     public int describeContents() {
         return 0;
@@ -60,7 +67,7 @@ public class SMS_JZYJ implements Parcelable {
         dest.writeString(_deep);
         dest.writeString(_bw);
         dest.writeString(_dj);
-
+        dest.writeString(_level);
     }
 
 
@@ -81,6 +88,7 @@ public class SMS_JZYJ implements Parcelable {
             sms_jzyj_._deep=in.readString();
             sms_jzyj_._bw=in.readString();
             sms_jzyj_._dj=in.readString();
+            sms_jzyj_._level=in.readString();
             return sms_jzyj_;
         }
     };

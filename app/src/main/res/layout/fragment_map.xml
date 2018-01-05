@@ -30,8 +30,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
-        android:layout_margin="20dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="120dp"
 
         >
       <ImageButton
@@ -39,10 +39,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:background="@drawable/ic_layers_black_24dp"
-          android:minHeight="48dp"
-          android:minWidth="48dp"
-
-
+          android:minHeight="36dp"
+          android:minWidth="36dp"
           />
     </LinearLayout>
     <LinearLayout
@@ -139,12 +137,12 @@
         android:paddingBottom="20dp"
 
         >
-     <TextView
+        <TextView
          android:id="@+id/geo_info"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:typeface="monospace"
-        style="@style/style_tv_bottom"
+         style="@style/style_tv_bottom"
          android:padding="5dp"
 
          />
@@ -159,7 +157,43 @@
             />
     </LinearLayout>
 
+    <com.ms.square.android.expandabletextview.ExpandableTextView
+        android:id="@+id/expand_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:paddingRight="100dp"
+        android:paddingLeft="20dp"
+        android:paddingBottom="20dp"
+        app:animAlphaStart="1"
+        app:maxCollapsedLines="4"
+android:orientation="vertical"
 
+        >
+
+    <TextView
+        android:id="@id/expandable_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:fontFamily="sans-serif-light"
+        android:padding="5dp"
+        android:textColor="#fff"
+        android:background="#e8fd4080"
+        />
+        <ImageButton
+            android:id="@id/expand_collapse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="-20dp"
+            android:layout_marginRight="20dp"
+            android:background="@android:color/transparent"/>
+
+</com.ms.square.android.expandabletextview.ExpandableTextView>
 
 
 </FrameLayout>

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -28,7 +30,8 @@ import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.zhoajie.sxeqem.global.MyApp;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.tianditu.android.maps.GeoPoint;
 import com.tianditu.android.maps.MapController;
 import com.tianditu.android.maps.MapView;
@@ -63,7 +66,7 @@ import java.util.Map;
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment implements View.OnClickListener,TGeoDecode.OnGeoResultListener{
+public class MapFragment extends  android.support.v4.app.Fragment  implements View.OnClickListener,TGeoDecode.OnGeoResultListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -82,6 +85,9 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
     //显示气象信息textview
     private TextView atomMsg;
     private LinearLayout layout_bottom;
+    //textview controller
+    private ExpandableTextView expTv;
+
     private OnFragmentInteractionListener mListener;
     //浮动按钮
     private FloatingActionButton fab_btn;
@@ -98,8 +104,9 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
 
     //短信
     private Uri SMS_INBOX = Uri.parse("content://sms/");
-    private SmsObserver smsObserver;
-    private static String msm_="中国地震台网正式测定：8月23日11时38分在山西太原市清徐县(北纬37.49,东经112.42)发生3.1级地震,震源深度5公里。距清徐县15公里,距太谷县14公里.山西省地震局";
+    private SmsObserver smsObserver;//37.49 36.3度，东经112.42
+
+    private static String msm_="中国地震台网正式测定：8月23日11时38分在山西太原市清徐县(北纬36.3,东经111.7)发生6.1级地震,震源深度5公里。距清徐县15公里,距太谷县14公里.山西省地震局";
     private String curNumber="";
     //存储查询到的地理位置和气象信息字符串
     private String requestAtomsphereUrl="";//存储天气信息结果字符串
@@ -123,6 +130,8 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
     private ImageButton imgBtn;
     private String define_service_url;
 
+    //全局 用于记录第一个tab页中发生地震的点位
+    private MyApp appState;
     public MapFragment() {
         // Required empty public constructor
     }
@@ -152,7 +161,11 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         this.mContext = getActivity();
+        //设置全局变量用于存储读取的短信或是从界面UI输入的地震信息
+         appState =  (MyApp) getActivity().getApplicationContext();
+       //String temp= appState.getLevel();
         //读取短信内容
         //若是自己手机测试 使用 myphone字符串资源
         //若是接收地震局短信号码使用 public字符串资源
@@ -169,10 +182,10 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_map, container, false);
-
         alb=new AlertDialog.Builder(getActivity());
-
         //弹出信息内容textview初始化
+        // sample code snippet to set the text content on the ExpandableTextView
+          expTv = (ExpandableTextView) v.findViewById(R.id.expand_text_view);
         layout_bottom=(LinearLayout)v.findViewById(R.id.bottomInfo_layout);
         geoMsg=(TextView) v.findViewById(R.id.geo_info);
         atomMsg=(TextView) v.findViewById(R.id.atom_info);
@@ -185,10 +198,17 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
         });
         //初始右下角按钮
         initFloatButton(v);
-
         //获取搜索输入框
         searchView=(android.support.v7.widget.SearchView)v.findViewById(R.id.sv_query);
-
+        //这就是那个搜索框设置按钮或文本focus 之后立即显示 不是默认的点完icon图标才能用
+        searchView.setIconifiedByDefault(false);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+            imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+            // 输入法如果是显示状态，那么就隐藏输入法
+        }
+        searchView.clearFocus(); // 不获取焦点
         //初始化搜索按钮
         queryBtn=(Button)v.findViewById(R.id.btn_queryPOI);
         queryBtn.setOnClickListener(new View.OnClickListener() {
@@ -223,13 +243,12 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
 
         //地图初始内容
         initMapParam(v);
-
         //设置右上角地图选择按钮
         initMapTypeChange(v);
-
         //默认位置
         double x=39.90923;
         double y= 116.397428;
+        double level=0.0;
         if(!TextUtils.isEmpty(sms_jzyj.get_BW()))
         {
             x= Double.parseDouble(sms_jzyj.get_BW());
@@ -238,6 +257,14 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
         {
             y= Double.parseDouble(sms_jzyj.get_DJ());
         }
+        if(!TextUtils.isEmpty(sms_jzyj.get_Level()))
+        {
+            level= Double.parseDouble(sms_jzyj.get_Level());
+        }
+        //
+        appState.setX(x);
+        appState.setY(y);
+        appState.setLevel(level);
         //geocoding or environment atomsphere
         get_GeoInfo(mContext,x,y);
         get_Atomsphere(x,y);
@@ -293,8 +320,7 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
 
 
         curGeoinforesult=str;//str += "实时天气:" + curAtomresult+ "\n";
-        geoMsg.setText(curGeoinforesult);
-        layout_bottom.setVisibility(View.VISIBLE);
+        expTv.setText(curGeoinforesult+expTv.getText());
         //Toast.makeText(mContext,str, Toast.LENGTH_LONG).show();
 
     }
@@ -345,7 +371,8 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
         View cx = layoutInflater.inflate(R.layout.posi_dialog, null);
         final      TextView tv1=(TextView) cx.findViewById(R.id.input_x);
         final     TextView tv2=(TextView) cx.findViewById(R.id.input_y);
-         alb.setTitle("请输入坐标点");
+        final TextView tv3=(TextView)cx.findViewById(R.id.input_level);
+        alb.setTitle("请输入坐标点");
         alb.setView(cx);
         final AlertDialog dialog= alb.create();
         //按钮事件
@@ -353,11 +380,13 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //获取输入点的数据坐标
-                //
+                //获取输入点的数据坐标 没有输入坐标点时按默认的xy来读取的
+
                 double x=39.90923;
                 double y= 116.397428;
-
+                double level=0.0;
+                //清除文本内容
+                expTv.setText("");
                 dialog.cancel();
                 if(!TextUtils.isEmpty(tv1.getText().toString()))
                 {
@@ -367,6 +396,15 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
                 {
                     y= Double.parseDouble(tv2.getText().toString());
                 }
+                if(!TextUtils.isEmpty(tv3.getText().toString()))
+                {
+
+                    level= Double.parseDouble(tv3.getText().toString());
+                }
+                //
+                appState.setX(x);
+                appState.setX(y);
+                appState.setX(level);
                 //添加新的地震位置
                 //显示当前位置的天气情况
                 curAtomresult="";
@@ -416,6 +454,8 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
         //mapView.setMapType(MapView.TMapType.MAP_TYPE_VEC);
         //天地图logo的显示位置可以通过接口在地图的4个角进行调整，方便开发者设计UI布局：
         mapView.setLogoPos(MapView.LOGO_RIGHT_TOP); //logo显示在右上角
+        mapView.isWebMercatorCRS();//说是可以清晰地图 我试试吧 @jiezhao
+
     }
 
     /**
@@ -431,10 +471,10 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
                 switch (buttonView.getId()){
                     case R.id.switch_type:
                         if(!isChecked){
-                            tb_map.setText("地图");
+                            tb_map.setText("卫星");
                             mapView.setMapType(MapView.TMapType.MAP_TYPE_VEC);
                         }else {
-                            tb_map.setText("卫星");
+                            tb_map.setText("地图");
                             mapView.setMapType(MapView.TMapType.MAP_TYPE_IMG);
                         }
                         break;
@@ -552,8 +592,9 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
                     String tempstr  =msg.obj.toString();
                     curAtomresult=   resolveJson(tempstr);
                     //Toast.makeText(mContext,curAtomresult, Toast.LENGTH_LONG).show();
-                    atomMsg.setText(curAtomresult);
-                    layout_bottom.setVisibility(View.VISIBLE);
+                     expTv.setText(curAtomresult+expTv.getText());
+                    //atomMsg.setText(curAtomresult);
+                    //layout_bottom.setVisibility(View.VISIBLE);
                     break;
                 case 0:
                     Toast.makeText(mContext, "天气获取失败",Toast.LENGTH_LONG).show();
@@ -665,7 +706,7 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
     public void getSmsFromPhone(String phoneNumber) {
         ContentResolver cr =mContext.getContentResolver();
         String[] projection = new String[] { "body" };//"_id", "address", "person",, "date", "type
-
+        //号码可以用固定的 地震专门的短信地址
         String where = " address = '"+phoneNumber+"' ";
         //        String where = " address = '8613132525116' "+"AND date >  "
 //                + (System.currentTimeMillis() - 10 * 60 * 1000);
@@ -711,15 +752,26 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
         String[] _xy=_zb.split(",");
         String latstr=_xy[0].replace("北纬","");
         String lonstr=_xy[1].replace("东经","");
+
+
         //震源深度
         int sms5=Sms_str.indexOf("深度");
         int sms6=Sms_str.indexOf("公里")+2;
         String _deep=Sms_str.substring(sms5,sms6);
+
+        //震级
+        int sms7=Sms_str.indexOf("级地震");
+        int sms8=Sms_str.indexOf("发生");
+        String _level=Sms_str.substring(sms8+2,sms7);
+        //
+
+
         sms_jzyj.set_BW(latstr);
         sms_jzyj.set_DJ(lonstr);
         sms_jzyj.set_Date(_date);
         sms_jzyj.set_Place(_place);
         sms_jzyj.set_Deep(_deep);
+        sms_jzyj.set_Level(_level);
         return  sms_jzyj;
 
     }
@@ -850,12 +902,13 @@ public class MapFragment extends Fragment implements View.OnClickListener,TGeoDe
                 String[] showLayers = showList.toArray(new String[showList
                         .size()]);
                 mapLayer_manage.setLayersShow(showLayers);
-                updateTips();
+                searchView.clearFocus();
             }
         };
 
         DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                searchView.clearFocus();
             }
         };
 

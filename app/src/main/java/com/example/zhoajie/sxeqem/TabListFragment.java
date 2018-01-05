@@ -4,9 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,7 +23,7 @@ import android.view.ViewGroup;
  * Use the {@link TabListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabListFragment extends Fragment {
+public class TabListFragment extends  android.support.v4.app.Fragment implements ZLFragment.OnFragmentInteractionListener,ALFragment.OnFragmentInteractionListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,6 +32,10 @@ public class TabListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private TabLayout ctl_tabLayout;
+    private ViewPager ctl_ViewPager;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,7 +74,28 @@ public class TabListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab_list, container, false);
+        View v=inflater.inflate(R.layout.fragment_tab_list, container, false);
+
+        //tab页面及viewpager
+        ctl_tabLayout=(TabLayout) v.findViewById(R.id.tabLayout);
+        ctl_ViewPager=(ViewPager)v.findViewById(R.id.tab_ViewPager);
+
+        //fragmentadpater初始化
+        //构造适配器
+        List<android.support.v4.app.Fragment> fragments=new ArrayList<android.support.v4.app.Fragment>();
+        fragments.add(new ZLFragment());
+        fragments.add(new ALFragment());
+        FragAdapter adapter = new FragAdapter(getChildFragmentManager(), fragments);
+        ctl_ViewPager.setAdapter(adapter);
+
+        ctl_tabLayout.setupWithViewPager(ctl_ViewPager);
+        //此处坑深 fuck populateItem啥啥的方法 会执行removealltabitem
+        //调用顺序必须是先setupWithViewPager
+        //然后再 加tabiitem
+        ctl_tabLayout.getTabAt(0).setText(R.string.tab1_title);
+        ctl_tabLayout.getTabAt(1).setText(R.string.tab2_title);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -89,6 +120,11 @@ public class TabListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     /**

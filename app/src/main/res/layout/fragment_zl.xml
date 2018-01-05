@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context="com.example.zhoajie.sxeqem.ZLFragment">
+    <!-- TODO: Update blank fragment layout -->
+    <ExpandableListView
+        android:id="@+id/expendlist_zl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:childDivider="#00000000"
+        android:background="#fff"
+        android:divider="#00000000"
+        android:dividerHeight="0dp"
+
+        >
+
+    </ExpandableListView>
+
+</FrameLayout>

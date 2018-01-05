@@ -1,8 +1,8 @@
 package com.example.zhoajie.sxeqem;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -18,8 +18,9 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.zhoajie.sxeqem.global.MyApp;
 import com.example.zhoajie.sxeqem.MapFragment.OnFragmentInteractionListener;
+import com.idescout.sql.SqlScoutServer;
 import com.tianditu.android.maps.GeoPoint;
 import com.tianditu.android.maps.MapController;
 import com.tianditu.android.maps.MapView;
@@ -30,9 +31,9 @@ import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity   implements
-        OnFragmentInteractionListener,TabListFragment.OnFragmentInteractionListener  {
-
-
+        OnFragmentInteractionListener,TabListFragment.OnFragmentInteractionListener,ZLFragment.OnFragmentInteractionListener,ALFragment.OnFragmentInteractionListener,PGFragment.OnFragmentInteractionListener  {
+    public MyApp appState;
+    public DBManager dbHelper;
     public static Fragment[] mFragments;
     private FragmentManager manager;
     private  FragmentTransaction transaction;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity   implements
                     SetSelection(1);
                     return true;
                 case R.id.navigation_estimate:
-                   SetSelection(0);
+                   SetSelection(2);
                     return true;
                 case R.id.navigation_dynamic:
                     SetSelection(1);
@@ -63,12 +64,21 @@ public class MainActivity extends AppCompatActivity   implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //使用的全局变量
+        appState = ((MyApp)getApplicationContext());
+        //appState.setLevel("1");
         setContentView(R.layout.activity_main);
+        //外部数据库写入内容
+        dbHelper = new DBManager(this);
+        dbHelper.openDatabase();
+        dbHelper.closeDatabase();
+        //
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        manager=getFragmentManager();
-        mFragments=new Fragment[2];
+        manager=getSupportFragmentManager();
+        mFragments=new Fragment[3];
 
          SetSelection(0);
     }
@@ -107,7 +117,7 @@ public class MainActivity extends AppCompatActivity   implements
                 {
                     // 如果MessageFragment为空，则创建一个并添加到界面上
                     mFragments[0]  = new MapFragment();
-                    transaction.add(R.id.con_frame,   mFragments[0]);
+                    transaction.add(R.id.con_frame, mFragments[0]);
                 }
                 else
                 {
@@ -131,6 +141,18 @@ public class MainActivity extends AppCompatActivity   implements
                 transaction.commit();
                 break;
             case 2:
+			if (mFragments[2] == null)
+                {
+                    // 如果MessageFragment为空，则创建一个并添加到界面上
+                    mFragments[2]  = new PGFragment();
+                    transaction.add(R.id.con_frame, mFragments[2]);
+                }
+                else
+                {
+                    // 如果MessageFragment不为空，则直接将它显示出来
+                    transaction.show(mFragments[2]);
+                }
+                transaction.commit();
                 break;
             case 3:
                 break;
