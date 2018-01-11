@@ -222,25 +222,19 @@ public class ZLFragment extends Fragment {
     }
     public void showItemInWebView(String htmlStr,String titleStr)
     {//效果糖 弹出网页的效果
-        htmlStr="file:///android_asset/ZL.html";
-        titleStr="当前城市及详细内容";
+        htmlStr="file:///android_asset/ZL/"+htmlStr+".htm";
+
         ctl_webview.loadUrl(htmlStr);
         tv_title_webview.setText(titleStr);
         ctl_webview.setWebViewClient(new WebViewClient()
         {
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-                view.loadUrl(url);
+                //view.loadUrl(url);
                 return true;
             }
         });
         webviewdialog.show();
-
-
-
-
-
-
     }
 
 

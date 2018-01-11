@@ -9,6 +9,7 @@ import com.example.zhoajie.sxeqem.Ellipse;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,6 +113,14 @@ public class EllipseCal {
         return  ells;
     }
 
+
+    /**
+     * 返回Double的小数点后2位
+     */
+    public static String doubleToString(double num){
+        //使用0.00不足位补0，#.##仅保留有效位
+        return new DecimalFormat("0.00").format(num);
+    }
 }
 
 

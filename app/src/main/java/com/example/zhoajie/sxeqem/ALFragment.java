@@ -120,7 +120,16 @@ public class ALFragment extends Fragment {
 
                 String p_url=demoNode.content;
                 String title=demoNode.name;
-                showItemInWebView(p_url,title);
+                if(groupPosition==0){
+                   //案例组的话要先弹出好多个地震列表
+                    String num=String.valueOf(childPosition);
+                    showItemInWebView(p_url,title,num);
+                }
+                if(groupPosition==1){
+                    //预案组的话就直接弹内容
+                    showItemInWebView(p_url,title);
+                }
+
                 return true;
             }
         });
@@ -204,27 +213,37 @@ public class ALFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    public void showItemInWebView(String htmlStr,String titleStr)
+    public void showItemInWebView(String htmlStr,String titleStr,String id)
     {//效果糖 弹出网页的效果
-        htmlStr="file:///android_asset/AL.html";
-        titleStr="当前城市及详细内容";
+        htmlStr="file:///android_asset/"+id+".htm";
+
         ctl_webview.loadUrl(htmlStr);
         tv_title_webview.setText(titleStr);
         ctl_webview.setWebViewClient(new WebViewClient()
         {
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-//                view.loadUrl(url);
+                //view.loadUrl(url);
                 return false;
             }
         });
         webviewdialog.show();
+    }
+    public void showItemInWebView(String htmlStr,String titleStr)
+    {//效果糖 弹出网页的效果
+        htmlStr="file:///android_asset/YA/"+htmlStr;
 
-
-
-
-
-
+        ctl_webview.loadUrl(htmlStr);
+        tv_title_webview.setText(titleStr);
+        ctl_webview.setWebViewClient(new WebViewClient()
+        {
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            { //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+              //  view.loadUrl(url);
+                return true;
+            }
+        });
+        webviewdialog.show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

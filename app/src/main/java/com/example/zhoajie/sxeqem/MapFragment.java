@@ -30,6 +30,8 @@ import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.zhoajie.sxeqem.global.MessageEvent;
 import com.example.zhoajie.sxeqem.global.MyApp;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.tianditu.android.maps.GeoPoint;
@@ -44,6 +46,7 @@ import com.tianditu.android.maps.TGeoDecode;
 import com.tianditu.android.maps.TMapLayerManager;
 import com.tianditu.android.maps.overlayutil.PoisOverlay;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -56,6 +59,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -175,6 +179,11 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
         define_service_url=this.mContext.getResources().getString(R.string.webserverurl);
         //获取内容填充到短信sms的数据类中
         getSmsFromPhone(curNumber);
+        //监听短信
+
+       getActivity().getContentResolver().registerContentObserver(
+                Uri.parse("content://sms"), true, new SmsObserver(mContext,new Handler()));
+
     }
 
     @Override
@@ -246,6 +255,10 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
         //设置右上角地图选择按钮
         initMapTypeChange(v);
         //默认位置
+        updatePoint();
+        return  v;
+    }
+    public void updatePoint(){
         double x=39.90923;
         double y= 116.397428;
         double level=0.0;
@@ -270,9 +283,8 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
         get_Atomsphere(x,y);
         //定位到坐标点
         SetMapCenterByPoint(x,y);
-        return  v;
-    }
 
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -384,7 +396,7 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
 
                 double x=39.90923;
                 double y= 116.397428;
-                double level=0.0;
+                double level=6.2;
                 //清除文本内容
                 expTv.setText("");
                 dialog.cancel();
@@ -403,14 +415,16 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
                 }
                 //
                 appState.setX(x);
-                appState.setX(y);
-                appState.setX(level);
+                appState.setY(y);
+                appState.setLevel(level);
                 //添加新的地震位置
                 //显示当前位置的天气情况
                 curAtomresult="";
                 get_GeoInfo(mContext,x,y);
                 get_Atomsphere(x,y);
                 SetMapCenterByPoint(x,y);
+                //注册事件 发送到pgfragment
+                //
 
             }
         });
@@ -688,9 +702,11 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
 
         @Override
         public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
+
             //每当有新短信到来时，使用我们获取短消息的方法
             getSmsFromPhone(curNumber);
+            updatePoint();
+            super.onChange(selfChange);
         }
     }
     public android.os.Handler   smsHandler = new android.os.Handler() {
@@ -938,5 +954,14 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
 
        //Toast.makeText(mContext,tips,Toast.LENGTH_LONG);
     }
+
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+    }
+
 
 }

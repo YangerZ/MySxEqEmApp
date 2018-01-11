@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.zhoajie.sxeqem.PGFragment"
+    >
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         android:layoutDirection="ltr"
+         android:background="@color/colorAccent"
+         >
+         <ImageButton
+             android:id="@+id/imgback"
+             android:layout_width="wrap_content"
+
+             android:layout_height="wrap_content"
+             android:layout_margin="10dp"
+             android:background="@drawable/ic_arrow_back_black_24dp" />
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="26dp"
+             android:text="XXX 名称"
+             android:layout_weight="1"
+             android:layout_margin="10dp"
+             android:padding="2dp"
+             android:textSize="20dp"
+             android:textColor="#ffffff"
+             android:textAlignment="center"
+
+             />
+
+
+     </LinearLayout>
+</FrameLayout>

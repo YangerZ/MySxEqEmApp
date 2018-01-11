@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,36 +38,82 @@ import java.util.List;
             return results;
         }
 
-    private String resolveJson(String p_json)
+    public static HashMap resolveJson(String gpjson)
     {
-        StringBuilder cur_sb=new StringBuilder();
-        if(TextUtils.isEmpty(p_json))
+        HashMap resultItem=new HashMap();
+
+        if(TextUtils.isEmpty(gpjson))
         {
-            return "";
+            return null;
         }
         try
         {
-            JSONObject original = new JSONObject(p_json);
-            JSONArray infArray = original.getJSONArray("results");
-            //
-            JSONObject inf_Array = infArray.getJSONObject(0);
-            JSONArray tq_infArray=inf_Array.getJSONArray("daily");
-            JSONObject _datajson=tq_infArray.getJSONObject(0);
-            //天气内容
-            String baitian=_datajson.getString("text_day");
-            String yejian=_datajson.getString("text_night");
-            String temper_hight=_datajson.getString("high");
-            String temper_low=_datajson.getString("low");
+            JSONObject resultJson = new JSONObject(gpjson);
+            JSONArray resutsArray = resultJson.getJSONArray("results");
+            //results 中可能有多个类型的结果
 
-            String wind_direction=_datajson.getString("wind_direction");
-            String wind_speed=_datajson.getString("wind_speed");
-            String wind_scale=_datajson.getString("wind_scale");
-            cur_sb.append( "实时天气："+"\n"+"白天"+baitian+",夜间"+yejian+ ","+"最高温度"+temper_hight+"°C，最低温度："+temper_low+"°C"+","+wind_direction+"风"+wind_scale+ "级，风速 "+wind_speed+"m/s"+"\n");
-            return  cur_sb.toString();
+             for (Integer i=0;i<resutsArray.length();i++)
+             {
+                 //result中对应显示UI业务的结果
+                 GpResult gpResult=new GpResult();
+                 //每个results 里包括 很多  paramName datetype value
+                 JSONObject cont_joson = resutsArray.getJSONObject(i);
+                 String paramName=cont_joson.getString("paramName");
+
+                 //按照paramName的名字找对应的rest结果
+
+                     //values 里包括 fields and features
+                     JSONObject valuesJson=cont_joson.getJSONObject("value");
+
+                     //解析fields
+                     JSONArray fieldsArray=valuesJson.getJSONArray("fields");
+                     for (Integer j=0;j<fieldsArray.length();j++)
+                     {
+                         JSONObject itemObj=fieldsArray.getJSONObject(j);
+                         String[] fields=new String[3];
+                         fields[0]=itemObj.getString("name");
+                         fields[1]=itemObj.getString("type");
+                         fields[2]=itemObj.getString("alias");
+                         gpResult.AddfieldItem(fields);
+
+                     }
+                     //解析features
+                     JSONArray featuresArray=valuesJson.getJSONArray("features");
+                     for (Integer k=0;k<featuresArray.length();k++)
+                     {
+                         Feature f=new  Feature();
+                        JSONObject featJson=   featuresArray.getJSONObject(k);
+                        JSONObject attriJson=   featJson.getJSONObject("attributes");
+                        Iterator<String> iterator= attriJson.keys();
+                         while (iterator.hasNext())
+                         {
+                             String fname=iterator.next().toString();
+                             Object fvalue=attriJson.get(fname);
+                             f.AddAttributeItem(fname,fvalue);
+
+                         }
+                         gpResult.AddfeatureItem(f);
+
+                     }
+                 /**
+                  * 这个是用gp结果参数来和result里的结果项匹配
+                  * 也就是在模拟结果的json结构
+                  */
+                 resultItem.put(paramName,gpResult);
+
+             }
+
+
+
+
         }
         catch(Exception ex)
         {
-            return  "";
+            String temp=ex.toString();
+            return null;
+        }
+        finally {
+            return resultItem;
         }
 
     }

@@ -25,7 +25,7 @@ $(document).ready(
     function(){
         // var curId=  $.getUrlParam("id");
         var param=getUrlParam("id");
-        //alert(param);
+        alert(param);
         if(param==null){
             //设个默认值要是不显示尴尬了
             param=0;
@@ -36,7 +36,7 @@ $(document).ready(
                 var content=obj.menus;
                 for(var j=0;j<content.length;j++){
                         //btngroupDiv
-                    var btncontentstr='<button  onclick="showPage('+content[i]+')"   class="btn btn-default btn-info">'+content[j]+'</button>';
+                    var btncontentstr='<button  onclick="showPage('+content[j]+')"   class="btn btn-default btn-info">'+content[j]+'</button>';
                     $(".btngroupDiv").append(btncontentstr);
                 }
             }

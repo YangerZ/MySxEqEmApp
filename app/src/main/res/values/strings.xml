@@ -37,4 +37,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="PGTabName">评估页内容</string>
     <string name="lbl_3">震级</string>
+
+    <string name="item_yxfw">影响范围</string>
+    <string name="yxfw_comment">极震区参数及地理环境</string>
+    <string name="item_zzj">震中距</string>
+    <string name="zzj_comment">震中距周边行政区距离</string>
+    <string name="item_lsdz">历史地震</string>
+    <string name="lsdz_comment">震中附近（50km）的历史地震</string>
+    <string name="item_dzal">地震案例</string>
+    <string name="dzal_comment">震级类似的地震案例</string>
 </resources>

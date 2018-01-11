@@ -42,4 +42,11 @@ public class EarthArchiveNode {
     public int destroy3;
     public int destroy4;
     public double lost;
+
+    public String GetTime(){
+
+      return year+"年  "+date+""+ time;
+    }
+
+
 }

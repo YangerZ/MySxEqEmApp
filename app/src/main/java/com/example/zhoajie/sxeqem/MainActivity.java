@@ -18,12 +18,18 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.zhoajie.sxeqem.global.MessageEvent;
 import com.example.zhoajie.sxeqem.global.MyApp;
 import com.example.zhoajie.sxeqem.MapFragment.OnFragmentInteractionListener;
 import com.idescout.sql.SqlScoutServer;
 import com.tianditu.android.maps.GeoPoint;
 import com.tianditu.android.maps.MapController;
 import com.tianditu.android.maps.MapView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.logging.Handler;
 import java.util.regex.Matcher;
@@ -145,14 +151,24 @@ public class MainActivity extends AppCompatActivity   implements
                 {
                     // 如果MessageFragment为空，则创建一个并添加到界面上
                     mFragments[2]  = new PGFragment();
+
+
                     transaction.add(R.id.con_frame, mFragments[2]);
+                    transaction.commit();
                 }
                 else
                 {
+
+                    PGFragment fragment2 = (PGFragment)mFragments[2];
+
+                    //EventBus.getDefault().post(new MessageEvent());
                     // 如果MessageFragment不为空，则直接将它显示出来
                     transaction.show(mFragments[2]);
+                    transaction.commit();
+                    fragment2.CalculateEllipse();
                 }
-                transaction.commit();
+
+
                 break;
             case 3:
                 break;
@@ -167,8 +183,9 @@ public class MainActivity extends AppCompatActivity   implements
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
+            String s=uri.toString();
     }
+
 
 
 
