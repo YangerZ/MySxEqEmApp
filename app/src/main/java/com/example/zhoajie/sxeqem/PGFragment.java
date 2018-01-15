@@ -80,7 +80,7 @@ public class PGFragment extends Fragment {
      * 记录全局页面的点位置
      */
     private MyApp appState;
-
+    private  MyApp prevState;
 
 
     //CardView上的详细按钮
@@ -188,10 +188,20 @@ public class PGFragment extends Fragment {
         CalculateEllipse();
         return pgview;
     }
-
+  public void SetBtnEnbaled(boolean isEnbled){
+      imgV1.setEnabled(isEnbled);
+      imgV2.setEnabled(isEnbled);
+      imgV3.setEnabled(isEnbled);
+      imgV4.setEnabled(isEnbled);
+  }
     //Event Bus接受消息回调
 
+   public void setTabUIVisible(){
+       detaillayout.setVisibility(View.GONE);
+       gplayout.setVisibility(View.VISIBLE);
+       SetBtnEnbaled(false);
 
+   }
 
     //将数据加载到UI上显示  Listview开始adpter模式
     /**
@@ -400,6 +410,9 @@ public class PGFragment extends Fragment {
             String label=labels[i].toString();
             String zh_label=labelsmap.get(label).toString();
             String item= attributeItems.get(label).toString();
+            if(label=="DISTANCE"){
+                item=EllipseCal.doubleToString( Double.parseDouble(attributeItems.get(label).toString()));
+            }
             stringBuilder.append( " "+zh_label+" : "+item+"\n");
         }
 
@@ -480,7 +493,7 @@ public class PGFragment extends Fragment {
      * 计算震级对应的 烈度 长短轴 椭圆面积 Gp调用等
      */
     public void CalculateEllipse() {
-        pbBar.setVisibility(View.VISIBLE);
+
         //接受全局变量的参数 可能是短信或者手动添加的坐标点
         MyApp appState = (MyApp) getActivity().getApplicationContext();
         double x = 0;//是经度
@@ -489,11 +502,44 @@ public class PGFragment extends Fragment {
          y= appState.getX();
          x = appState.getY();
         level = appState.getLevel();
+        SetBtnEnbaled(false);
+
+       // 赵杰2018/1/13 21:17:15
+        //经纬度范围：　34.56　－　40.72 110.23　－114.55
+        if( (y< 40.72 && y> 34.56)&&(x > 110.23 && x < 114.55)){
+
+
+        }
+        else
+        {
+            Toast.makeText(mContext, "超出山西省地理范围",
+                Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //不在的话
+        //对不住了老铁
         //检查坐标及震级是否传回
         if (x == 0 || y == 0 || level == 0) {
 
             return;
         }
+        if(prevState==null)
+        prevState=appState;
+        else
+        {
+            if((appState.getX()==prevState.getX())&&appState.getY()==prevState.getY())
+            {
+
+                SetBtnEnbaled(true);
+                return;
+
+            }
+        }
+        //计算需要约20s，请耐心等待
+        Toast.makeText(mContext, "计算需要约20s，请耐心等待",
+                Toast.LENGTH_LONG).show();
+        pbBar.setVisibility(View.VISIBLE);
+
         //请求参数已准备好
         List<MetaIS> metaISList = null;
         try {
@@ -509,9 +555,9 @@ public class PGFragment extends Fragment {
             String a =EllipseCal.doubleToString(ells[0].a); //String.valueOf(ells[0].a);
             String b =EllipseCal.doubleToString(ells[0].b);  //String.valueOf(ells[0].b);
             //集镇区面积
-            String area = String.valueOf(ells[0].getArea());
+            String area =EllipseCal.doubleToString(ells[0].getArea());// String.valueOf(ells[0].getArea());
             //灾区面积
-            String areaZQ = String.valueOf(ells[1].getArea());
+            String areaZQ =EllipseCal.doubleToString(ells[1].getArea());// String.valueOf(ells[1].getArea());
             //添加极震区坐标点Gp rest get http
             yxfwresult.tag_ld=ld;
             yxfwresult.tag_a=a;
@@ -758,6 +804,7 @@ public class PGFragment extends Fragment {
                 finally {
                     //
                     pbBar.setVisibility(View.GONE);
+                    SetBtnEnbaled(true);
                     Toast.makeText(mContext, "查询完成",
                             Toast.LENGTH_SHORT).show();
 

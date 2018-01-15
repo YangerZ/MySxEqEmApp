@@ -9,6 +9,7 @@ import com.example.zhoajie.sxeqem.Ellipse;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,8 +120,13 @@ public class EllipseCal {
      */
     public static String doubleToString(double num){
         //使用0.00不足位补0，#.##仅保留有效位
-        return new DecimalFormat("0.00").format(num);
+        BigDecimal d1 = new BigDecimal(Double.toString(num));
+        BigDecimal d2 = new BigDecimal(Integer.toString(1));
+        // 四舍五入,保留2位小数
+        return d1.divide(d2,0,BigDecimal.ROUND_HALF_UP).toString();
+
     }
+
 }
 
 

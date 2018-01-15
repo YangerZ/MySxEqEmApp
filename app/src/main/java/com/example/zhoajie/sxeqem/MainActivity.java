@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity   implements
                     // 如果MessageFragment不为空，则直接将它显示出来
                     transaction.show(mFragments[2]);
                     transaction.commit();
+                    fragment2.setTabUIVisible();
                     fragment2.CalculateEllipse();
                 }
 

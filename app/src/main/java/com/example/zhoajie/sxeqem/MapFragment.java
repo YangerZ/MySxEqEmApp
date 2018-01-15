@@ -181,8 +181,8 @@ public class MapFragment extends  android.support.v4.app.Fragment  implements Vi
         getSmsFromPhone(curNumber);
         //监听短信
 
-       getActivity().getContentResolver().registerContentObserver(
-                Uri.parse("content://sms"), true, new SmsObserver(mContext,new Handler()));
+//       getActivity().getContentResolver().registerContentObserver(
+//                Uri.parse("content://sms"), true, new SmsObserver(mContext,new Handler()));
 
     }
 

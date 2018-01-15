@@ -1,5 +1,7 @@
 package com.example.zhoajie.sxeqem;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Administrator on 2017/12/28.
  */
@@ -13,7 +15,9 @@ public class Ellipse {
 
     public  double getArea()
     {
-        return Math.PI*a*b;
+        double area=Math.PI*a*b;
+
+        return area;
     }
     public void setMax(double _a)
     {
